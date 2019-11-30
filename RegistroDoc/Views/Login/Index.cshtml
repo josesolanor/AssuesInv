@@ -1,47 +1,44 @@
-﻿@model IEnumerable<RegistroDoc.Entities.User>
+﻿@model LoginViewModels
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Login";
+    Layout = "_LayoutLogin";
 }
 
-<h1>Index</h1>
+<center>
+    <div class="card">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel  panel-primary">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">Iniciar sesión</h2>
+                    </div>
+                    <div class="panel-body">
+                        <section>
+                            <form asp-controller="Login" asp-action="Index" method="post">                                
+                                <div class="form-group  text-left">
+                                    <label asp-for="Input.Username"></label>
+                                    <input asp-for="Input.Username" class="form-control" />
+                                    <span asp-validation-for="Input.Username" class="text-danger"></span>
+                                </div>
+                                <div class="form-group  text-left">
+                                    <label asp-for="Input.Password"></label>
+                                    <input asp-for="Input.Password" class="form-control" />
+                                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+                <label id="indexMessage" class="error">@Html.DisplayFor(m => m.ErrorMessage)</label>
+            </div>
+        </div>
+    </div>
+</center>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Account)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Role)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Account)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role.RoleId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
-            </td>
-        </tr>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }
-    </tbody>
-</table>

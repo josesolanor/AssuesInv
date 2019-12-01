@@ -17,5 +17,7 @@ namespace RegistroDoc.Context
 
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<Inventory> Inventory { get; set; }
+        public virtual DbSet<Movements> Movements { get; set; }
     }
 }

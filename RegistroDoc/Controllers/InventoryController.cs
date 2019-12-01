@@ -7,21 +7,73 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RegistroDoc.Context;
 using RegistroDoc.Entities;
+using RegistroDoc.Models;
 
 namespace RegistroDoc.Controllers
 {
     public class InventoryController : Controller
     {
         private readonly AppDBContext _context;
-
+     
         public InventoryController(AppDBContext context)
         {
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Inventory.ToListAsync());
+            var model = new InventoryViewModel();
+            return View(model);
+        }
+
+        public IActionResult LoadGrid()
+        {
+            List<InventoryViewModels> inventoryList = new List<InventoryViewModels>();
+            List<MovementsViewModels> movementList = new List<MovementsViewModels>();
+
+            var inventories = _context.Inventory  
+                .ToList();            
+
+            foreach (Inventory item in inventories)
+            {
+                inventoryList.Add(new InventoryViewModels
+                {
+                    InventoryId = item.InventoryId,
+                    Number = item.Number,
+                    ReferenceCode = item.ReferenceCode,
+                    DocumentTitle = item.DocumentTitle,
+                    Series = item.Series,
+                    SecondNumber = item.SecondNumber,
+                    ExtremeDates = item.ExtremeDates,
+                    InstallationUnit = item.InstallationUnit,
+                    NumberSheets = item.NumberSheets,
+                    ProducerName = item.ProducerName,
+                    StateConservation = item.StateConservation,
+                    DocumentObservation = item.DocumentObservation,
+                    Shelf = item.Shelf,
+                    Bald = item.Bald,
+                    Box = item.Box
+                });
+
+                var movements = _context.Movements
+                    .Where(m => m.InventoryId.Equals(item.InventoryId))
+                    .ToList();
+
+                foreach (Movements itemMovement in movements)
+
+                    movementList.Add(new MovementsViewModels
+                    {
+                        MovementsId = itemMovement.MovementsId,
+                        MovementType = itemMovement.MovementType,
+                        MovementObservation = itemMovement.MovementObservation,
+                        MovementDate = itemMovement.MovementDate,
+                        InventoryId = itemMovement.InventoryId
+                    });
+            }
+
+            var result = new { Master = inventoryList, Detail = movementList };
+
+            return Json(result);
         }
 
         public async Task<IActionResult> Details(int? id)

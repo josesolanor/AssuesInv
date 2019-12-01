@@ -1,0 +1,113 @@
+﻿@model IEnumerable<RegistroDoc.Entities.Inventory>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReferenceCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DocumentTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Series)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SecondNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExtremeDates)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InstallationUnit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumberSheets)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProducerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StateConservation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DocumentObservation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Shelf)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bald)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Box)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReferenceCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DocumentTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Series)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SecondNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExtremeDates)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InstallationUnit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberSheets)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProducerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StateConservation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DocumentObservation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Shelf)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bald)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Box)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.InventoryId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.InventoryId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.InventoryId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

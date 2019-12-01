@@ -9,7 +9,7 @@ using RegistroDoc.Context;
 namespace RegistroDoc.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20191130030002_Initial")]
+    [Migration("20191130233805_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,41 +24,64 @@ namespace RegistroDoc.Migrations
                 {
                     b.Property<int>("RoleId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("SYS_INASES_INV_ROLE_ROLE_ID")
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("RoleDescription")
+                        .HasColumnName("SYS_INASES_INV_ROLE_ROLE_DESCRIPTION")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleValue")
+                        .HasColumnName("SYS_INASES_INV_ROLE_ROLE_VALUE")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Role");
+                    b.ToTable("SYS_INASES_INV_ROLE");
                 });
 
             modelBuilder.Entity("RegistroDoc.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("SYS_INASES_INV_USER_USER_ID")
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Account")
+                        .HasColumnName("SYS_INASES_INV_USER_ACCOUNT")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnName("SYS_INASES_INV_USER_EMAIL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnName("SYS_INASES_INV_USER_FIRST_NAME")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnName("SYS_INASES_INV_USER_LAST_NAME")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .HasColumnName("SYS_INASES_INV_USER_PASSWORD")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoleId")
+                        .HasColumnName("SYS_INASES_INV_USER_ROLE_ID")
                         .HasColumnType("int");
+
+                    b.Property<string>("SecondLastName")
+                        .HasColumnName("SYS_INASES_INV_USER_SECOND_LAST_NAME")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("User");
+                    b.ToTable("SYS_INASES_INV_USER");
                 });
 
             modelBuilder.Entity("RegistroDoc.Entities.User", b =>

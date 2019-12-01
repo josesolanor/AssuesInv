@@ -1,0 +1,46 @@
+﻿@model RegistroDoc.Entities.Movements
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Movements</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MovementsId" />
+            <div class="form-group">
+                <label asp-for="MovementType" class="control-label"></label>
+                <input asp-for="MovementType" class="form-control" />
+                <span asp-validation-for="MovementType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MovementDate" class="control-label"></label>
+                <input asp-for="MovementDate" class="form-control" />
+                <span asp-validation-for="MovementDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MovementObservation" class="control-label"></label>
+                <input asp-for="MovementObservation" class="form-control" />
+                <span asp-validation-for="MovementObservation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InventoryId" class="control-label"></label>
+                <select asp-for="InventoryId" class="form-control" asp-items="ViewBag.InventoryId"></select>
+                <span asp-validation-for="InventoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

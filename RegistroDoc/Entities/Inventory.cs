@@ -19,6 +19,8 @@ namespace RegistroDoc.Entities
         public string DocumentTitle { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_SERIES")]
         public string Series { get; set; }
+        [Column("SYS_INASES_INV_INVENTORY_VOLUMEN")]
+        public string Volume { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_SECOND_NUMBER")]
         public string SecondNumber { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_EXTREME_DATE")]
@@ -38,7 +40,7 @@ namespace RegistroDoc.Entities
         [Column("SYS_INASES_INV_INVENTORY_BALD")]
         public string Bald { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_BOX")]
-        public string Box { get; set; }        
+        public int Box { get; set; }        
         public ICollection<Movements> Movements { get; set; }
     }
 }

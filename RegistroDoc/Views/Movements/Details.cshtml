@@ -1,0 +1,42 @@
+﻿@model RegistroDoc.Entities.Movements
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Movements</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MovementType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MovementType)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MovementDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MovementDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MovementObservation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MovementObservation)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Inventory)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Inventory.InventoryId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.MovementsId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -22,7 +22,7 @@ namespace RegistroDoc.Controllers
 
         public IActionResult Index()
         {
-            var model = new InventoryViewModel();
+            var model = new InvIndexViewModel();
             return View(model);
         }
 
@@ -43,6 +43,7 @@ namespace RegistroDoc.Controllers
                     ReferenceCode = item.ReferenceCode,
                     DocumentTitle = item.DocumentTitle,
                     Series = item.Series,
+                    Volume = item.Volume,
                     SecondNumber = item.SecondNumber,
                     ExtremeDates = item.ExtremeDates,
                     InstallationUnit = item.InstallationUnit,
@@ -100,7 +101,7 @@ namespace RegistroDoc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("InventoryId,Number,ReferenceCode,DocumentTitle,Series,SecondNumber,ExtremeDates,InstallationUnit,NumberSheets,ProducerName,StateConservation,DocumentObservation,Shelf,Bald,Box")] Inventory inventory)
+        public async Task<IActionResult> Create(Inventory inventory)
         {
             if (ModelState.IsValid)
             {
@@ -128,7 +129,7 @@ namespace RegistroDoc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("InventoryId,Number,ReferenceCode,DocumentTitle,Series,SecondNumber,ExtremeDates,InstallationUnit,NumberSheets,ProducerName,StateConservation,DocumentObservation,Shelf,Bald,Box")] Inventory inventory)
+        public async Task<IActionResult> Edit(int id, Inventory inventory)
         {
             if (id != inventory.InventoryId)
             {

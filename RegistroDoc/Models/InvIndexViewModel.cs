@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RegistroDoc.Models
 {
-    public class InventoryViewModel
+    public class InvIndexViewModel
     {
         public IEnumerable<Inventory> Inventaries { get; set; }
         public Movements Movement { get; set; }

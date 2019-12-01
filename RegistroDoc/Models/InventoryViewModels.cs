@@ -12,6 +12,7 @@ namespace RegistroDoc.Models
         public string ReferenceCode { get; set; }
         public string DocumentTitle { get; set; }
         public string Series { get; set; }
+        public string Volume { get; set; }
         public string SecondNumber { get; set; }
         public string ExtremeDates { get; set; }
         public string InstallationUnit { get; set; }
@@ -21,6 +22,6 @@ namespace RegistroDoc.Models
         public string DocumentObservation { get; set; }
         public string Shelf { get; set; }
         public string Bald { get; set; }
-        public string Box { get; set; }
+        public int Box { get; set; }
     }
 }

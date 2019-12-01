@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RegistroDoc.Context;
 
 namespace RegistroDoc.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20191201191441_InventoryVolumen")]
+    partial class InventoryVolumen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,9 +33,9 @@ namespace RegistroDoc.Migrations
                         .HasColumnName("SYS_INASES_INV_INVENTORY_BALD")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Box")
+                    b.Property<string>("Box")
                         .HasColumnName("SYS_INASES_INV_INVENTORY_BOX")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DocumentObservation")
                         .HasColumnName("SYS_INASES_INV_INVENTORY_DOCUMENT_OBSERVATION")

@@ -14,12 +14,14 @@
     <div id="inventoryGrid"></div>
 </div>
 
-<div id="MovementModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+<div id="MovementModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Registrar Movimiento</h4>
+                <h5 class="modal-title">Registrar Movimiento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -27,18 +29,24 @@
                         <form asp-action="Create" asp-controller="Movements" method="post">
                             <div class="col-xs-12">
                                 <div class="form-group">
+                                    <label asp-for="Movement.MovementDate" class="control-label"></label>
+                                    <div style="width: 100%" class="form-control" id="RegisterDate" />
+                                    <span asp-validation-for="Movement.MovementDate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
                                     <label asp-for="Movement.MovementObservation" class="control-label"></label>
-                                    <input asp-for="Movement.MovementObservation" class="form-control" />
+                                    <input id="MovementObservation" name="MovementObservation" class="form-control" />
                                     <span asp-validation-for="Movement.MovementObservation" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-xs-12">
                                 <div class="form-group">
-                                    <input type="submit" value="Guardar" class="btn btn-default" />
+                                    <input type="submit" value="Guardar" class="btn btn-primary" />
                                 </div>
                             </div>
-                            <input asp-for="Movement.InventoryId" hidden value="0">
-                            <input asp-for="Movement.MovementType" hidden value="">
+                            <input id="MovementType" name="MovementType" hidden value="0">
+                            <input id="InventoryId" name="InventoryId" hidden value="0">
+                            <input id="RegisterDateString" name="RegisterDateString" hidden value="0" />
                         </form>
                     </div>
                 </div>
@@ -79,6 +87,9 @@
                 filterRow: {
                     visible: true,
                 },
+                columnFixing: { 
+                    enabled: true
+                },
                 headerFilter: { visible: true },
                 paging: {
                     pageSize: 25
@@ -116,6 +127,7 @@
                     },
                     {
                         dataField: "documentTitle",
+                        width: 240,
                         caption: 'Título del documento'
                     },
                     {
@@ -169,6 +181,9 @@
                     {
                         dataField: "Acciones",
                         caption: 'Acciones',
+                        fixed: true,
+                        fixedPosition: "right",
+                        width: 165,
                         cellTemplate: function (container, options) {
 
                             var wrapper = $("<center>");
@@ -220,6 +235,9 @@
                     {
                         dataField: "Registros",
                         caption: 'Registros',
+                        fixed: true,
+                        fixedPosition: "right",
+                        width: 115,
                         cellTemplate: function (container, options) {
 
                             var wrapper = $("<center>");
@@ -230,11 +248,11 @@
 
                             IncomeContainer.dxButton({
                                 hint: 'Ingreso',
-                                type: "default",
+                                type: "success",
                                 icon: 'fa fa-arrow-circle-left',
                                 width: 50,
                                 onClick: function () {
-                                    var incomeData = {id: options.data.inventoryId, action: "Income"}
+                                    var incomeData = {id: options.data.inventoryId, action: "Ingreso"}
                                     movementModal(incomeData);
                                 }
                             });
@@ -242,70 +260,66 @@
                             container.append(wrapper.append(OutflowContainer));
 
                             OutflowContainer.dxButton({
-                                hint: 'Salida',
-                                type: "default",
+                                hint: 'Egreso',
+                                type: "danger",
                                 icon: 'fa fa-arrow-circle-right',
                                 width: 50,
                                 onClick: function () {
-                                    var outflowData = {id: options.data.inventoryId, action: "Outflow"}
+                                    var outflowData = {id: options.data.inventoryId, action: "Egreso"}
                                     movementModal(outflowData)
                                 }
                             });
                         }
                     }
                 ],
-                //masterDetail: {
-                //enabled: true,
-                //    template: function (container, options)
-                //    {
-                //    var currentClientData = options.data;
-                //        $("<div>")
-                //            .addClass("master-detail-caption")
-                //            .text("Visitas de " + currentClientData.firstName + " " + currentClientData.lastName)
-                //            .appendTo(container);
+                masterDetail: {
+                enabled: true,
+                    template: function (container, options)
+                    {
+                    var currentDocumentData = options.data;
+                        $("<div>")
+                            .addClass("master-detail-caption")
+                            .text("Historico del documento: "+currentDocumentData.documentTitle+", Codigo: "+currentDocumentData.referenceCode)
+                            .appendTo(container);
 
-                //        $("<div>")
-                //            .dxDataGrid({
-                //                columnAutoWidth: true,
-                //                showBorders: true,
-                //                columns: [
-                //                {
-                //                    dataField: "clientId",
-                //                    visible: false
-                //                },
-                //                {
-                //                    dataField: "visitRegistrationId",
-                //                    visible: false
-                //                },
-                //                {
-                //                    dataField: "visitDay",
-                //                    caption: 'Fecha',
-                //                    dataType: "date",
-                //                    format: 'dd/MM/yyyy HH:mm:ss'
-                //                },
-                //                {
-                //                    dataField: "departmentCode",
-                //                    caption: 'Codigo Dpto'
-                //                },
-                //                {
-                //                    dataField: "stateVisitStateValue",
-                //                    caption: 'Estado'
-                //                },
-                //                {
-                //                    dataField: "commisionerFullName",
-                //                    caption: 'Comisionista Asignado'
-                //                }
-                //                ],
-                //                dataSource: new DevExpress.data.DataSource({
-                //                    store: new DevExpress.data.ArrayStore({
-                //                        key: "visitRegistrationId",
-                //                        data: dataSourceDetail
-                //                    }),
-                //                    filter: ["clientId", "=", options.key]
-                //                })
-                //            }).appendTo(container);
-                //    }
-                //}
+                        $("<div>")
+                            .dxDataGrid({
+                                columnAutoWidth: true,
+                                showBorders: true,
+                                columns: [
+                                {
+                                    dataField: "movementsId",
+                                    visible: false
+                                },
+                                {
+                                    dataField: "movementType",
+                                    caption: 'Tipo de movimiento'
+                                },
+                {
+                                    dataField: "movementObservation",
+                                    caption: 'Observaciones'
+                                },
+                                {
+                                    dataField: "movementDate",
+                                    caption: 'Fecha',
+                                    dataType: "date",
+                                    format: 'dd/MM/yyyy HH:mm:ss'
+                                },
+                                {
+                                    dataField: "inventoryId",
+                                    visible: false
+                                }
+                                ],
+                                dataSource: new DevExpress.data.DataSource({
+                                    store: new DevExpress.data.ArrayStore({
+                                        key: "movementsId",
+                                        data: dataSourceDetail
+                                    }),
+                                    filter: ["inventoryId", "=", options.key]
+                                })
+                            }).appendTo(container);
+                    }
+                }
             });
         });
 
@@ -315,9 +329,21 @@
         function movementModal(data) {
             console.log(data);
             $("#MovementModal").modal();
-            $("#Movement_InventoryId").val(data.id);
-            $("#Movement_MovementType").val(data.action);
+            document.getElementById("InventoryId").value = data.id;
+            document.getElementById("MovementType").value = data.action;
+            
+            $(function () {
+                $('#RegisterDateString').val(new Date());
+                $("#RegisterDate").dxDateBox({
+                    type: "datetime",
+                    value: new Date(),
+                    displayFormat: "dd/MM/yyy HH:mm",    
+                    onValueChanged: function (e) {
+                        var newValue = String(e.value);
+                        $('#RegisterDateString').val(newValue);
+                    }
+                });
+            });
         }
     </script>
-
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RegistroDoc.Context;
 using RegistroDoc.Entities;
+using RegistroDoc.Models;
 
 namespace RegistroDoc.Controllers
 {
@@ -19,14 +21,14 @@ namespace RegistroDoc.Controllers
             _context = context;
         }
 
-        // GET: Movements
+
         public async Task<IActionResult> Index()
         {
             var appDBContext = _context.Movements.Include(m => m.Inventory);
             return View(await appDBContext.ToListAsync());
         }
 
-        // GET: Movements/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,31 +47,38 @@ namespace RegistroDoc.Controllers
             return View(movements);
         }
 
-        // GET: Movements/Create
+
         public IActionResult Create()
         {
             ViewData["InventoryId"] = new SelectList(_context.Inventory, "InventoryId", "InventoryId");
             return View();
         }
 
-        // POST: Movements/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MovementsId,MovementType,MovementDate,MovementObservation,InventoryId")] Movements movements)
+        public async Task<IActionResult> Create(MovementCreateViewModel data)
         {
             if (ModelState.IsValid)
             {
+                var date = DateTime.ParseExact(data.RegisterDateString.Substring(0, 24),
+                                          "ddd MMM dd yyyy HH:mm:ss",
+                                          CultureInfo.InvariantCulture);
+
+                Movements movements = new Movements
+                {
+                    InventoryId = data.InventoryId,
+                    MovementObservation = data.MovementObservation,
+                    MovementType = data.MovementType,
+                    MovementDate = date
+                };
                 _context.Add(movements);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Inventory");
             }
-            ViewData["InventoryId"] = new SelectList(_context.Inventory, "InventoryId", "InventoryId", movements.InventoryId);
-            return View(movements);
+            TempData["ErrorMsg"] = $"Error, No se pudo realizar la accion";
+            return RedirectToAction("Index", "Inventory");
         }
 
-        // GET: Movements/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,9 +95,6 @@ namespace RegistroDoc.Controllers
             return View(movements);
         }
 
-        // POST: Movements/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MovementsId,MovementType,MovementDate,MovementObservation,InventoryId")] Movements movements)
@@ -122,7 +128,6 @@ namespace RegistroDoc.Controllers
             return View(movements);
         }
 
-        // GET: Movements/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -141,7 +146,6 @@ namespace RegistroDoc.Controllers
             return View(movements);
         }
 
-        // POST: Movements/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

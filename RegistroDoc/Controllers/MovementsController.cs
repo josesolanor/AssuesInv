@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using RegistroDoc.Models;
 
 namespace RegistroDoc.Controllers
 {
+    [Authorize]
     public class MovementsController : Controller
     {
         private readonly AppDBContext _context;
@@ -21,41 +23,9 @@ namespace RegistroDoc.Controllers
             _context = context;
         }
 
-
-        public async Task<IActionResult> Index()
-        {
-            var appDBContext = _context.Movements.Include(m => m.Inventory);
-            return View(await appDBContext.ToListAsync());
-        }
-
-
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var movements = await _context.Movements
-                .Include(m => m.Inventory)
-                .FirstOrDefaultAsync(m => m.MovementsId == id);
-            if (movements == null)
-            {
-                return NotFound();
-            }
-
-            return View(movements);
-        }
-
-
-        public IActionResult Create()
-        {
-            ViewData["InventoryId"] = new SelectList(_context.Inventory, "InventoryId", "InventoryId");
-            return View();
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,RegistraLectura")]
         public async Task<IActionResult> Create(MovementCreateViewModel data)
         {
             if (ModelState.IsValid)
@@ -79,6 +49,7 @@ namespace RegistroDoc.Controllers
             return RedirectToAction("Index", "Inventory");
         }
 
+        [Authorize(Roles = "Admin,RegistraLectura")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -97,6 +68,7 @@ namespace RegistroDoc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,RegistraLectura")]
         public async Task<IActionResult> Edit(int id, [Bind("MovementsId,MovementType,MovementDate,MovementObservation,InventoryId")] Movements movements)
         {
             if (id != movements.MovementsId)
@@ -122,12 +94,13 @@ namespace RegistroDoc.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Inventory");
             }
             ViewData["InventoryId"] = new SelectList(_context.Inventory, "InventoryId", "InventoryId", movements.InventoryId);
-            return View(movements);
+            return RedirectToAction("Index", "Inventory");
         }
 
+        [Authorize(Roles = "Admin,RegistraLectura")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -148,12 +121,13 @@ namespace RegistroDoc.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,RegistraLectura")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var movements = await _context.Movements.FindAsync(id);
             _context.Movements.Remove(movements);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Inventory");
         }
 
         private bool MovementsExists(int id)

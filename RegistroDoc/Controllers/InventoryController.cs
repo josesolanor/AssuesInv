@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using RegistroDoc.Models;
 
 namespace RegistroDoc.Controllers
 {
+    [Authorize]
     public class InventoryController : Controller
     {
         private readonly AppDBContext _context;
@@ -18,14 +20,15 @@ namespace RegistroDoc.Controllers
         public InventoryController(AppDBContext context)
         {
             _context = context;
-        }
-
+        }       
+        [Authorize(Roles = "Admin,RegistraLectura,SoloLectura")]
         public IActionResult Index()
         {
             var model = new InvIndexViewModel();
             return View(model);
         }
 
+        [Authorize(Roles = "Admin,RegistraLectura,SoloLectura")]
         public IActionResult LoadGrid()
         {
             List<InventoryViewModels> inventoryList = new List<InventoryViewModels>();
@@ -77,6 +80,7 @@ namespace RegistroDoc.Controllers
             return Json(result);
         }
 
+        [Authorize(Roles = "Admin,SoloLectura")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -94,6 +98,7 @@ namespace RegistroDoc.Controllers
             return View(inventory);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -101,6 +106,7 @@ namespace RegistroDoc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Inventory inventory)
         {
             if (ModelState.IsValid)
@@ -112,6 +118,7 @@ namespace RegistroDoc.Controllers
             return View(inventory);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -129,6 +136,7 @@ namespace RegistroDoc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Inventory inventory)
         {
             if (id != inventory.InventoryId)
@@ -159,6 +167,7 @@ namespace RegistroDoc.Controllers
             return View(inventory);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -176,6 +185,7 @@ namespace RegistroDoc.Controllers
             return View(inventory);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

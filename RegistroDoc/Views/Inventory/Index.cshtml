@@ -77,7 +77,6 @@
     <script>
         var userRoleActionDocumentVisible = true;
         var userRoleRegisterDocumentVisible = true;
-
         $(function () {
             if ('@userRole' == "Admin") {
                 userRoleActionDocumentVisible = true;
@@ -94,13 +93,21 @@
             }
         });
 
+    $.ajax({
+        url: '@Url.Action("LoadGrid", "Inventory")',
+        type: "GET"
+    }).done(function (response) {
+
+        var dataSourceMaster = response.master;
+        var dataSourceDetail = response.detail;
+
+        console.log(dataSourceMaster);
+        console.log(dataSourceDetail);
 
         $(function(){
             $("#inventoryGrid").dxDataGrid({
-                dataSource: DevExpress.data.AspNet.createStore({
-                    key: "inventoryId",
-                    loadUrl: "@Url.Action("LoadGrid", "Inventory")"
-                }),
+                dataSource: dataSourceMaster,
+                keyExpr: "inventoryId",
                 allowColumnReordering: true,
                 allowColumnResizing: true,
                 columnAutoWidth: true,
@@ -118,11 +125,6 @@
                     enabled: true
                 },
                 headerFilter: { visible: true },
-                remoteOperations: true,
-                scrolling: {
-                    mode: "virtual",
-                    rowRenderingMode: "virtual"
-                },
                 paging: {
                     pageSize: 25
                 },
@@ -391,18 +393,20 @@
                                     }
                                 },
                                 ],
-                                dataSource: DevExpress.data.AspNet.createStore({
-                                    key: "movementsId",
-                                    loadUrl: "@Url.Action("LoadDetailGrid", "Inventory")",
+                                dataSource: new DevExpress.data.DataSource({
+                                    store: new DevExpress.data.ArrayStore({
+                                        key: "movementsId",
+                                        data: dataSourceDetail
+                                    }),
                                     filter: ["inventoryId", "=", options.key]
                                 })
-
                             }).appendTo(container);
                     }
                 }
             });
         });
 
+    });
     </script>
     <script>
         function movementModal(data) {

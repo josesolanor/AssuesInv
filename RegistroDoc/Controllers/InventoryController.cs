@@ -32,10 +32,9 @@ namespace RegistroDoc.Controllers
         public IActionResult LoadGrid()
         {
             List<InventoryViewModels> inventoryList = new List<InventoryViewModels>();
-            List<MovementsViewModels> movementList = new List<MovementsViewModels>();
 
             var inventories = _context.Inventory  
-                .ToList();            
+                .ToList();
 
             foreach (Inventory item in inventories)
             {
@@ -58,26 +57,49 @@ namespace RegistroDoc.Controllers
                     Bald = item.Bald,
                     Box = item.Box
                 });
-
-                var movements = _context.Movements
-                    .Where(m => m.InventoryId.Equals(item.InventoryId))
-                    .ToList();
-
-                foreach (Movements itemMovement in movements)
-
-                    movementList.Add(new MovementsViewModels
-                    {
-                        MovementsId = itemMovement.MovementsId,
-                        MovementType = itemMovement.MovementType,
-                        MovementObservation = itemMovement.MovementObservation,
-                        MovementDate = itemMovement.MovementDate,
-                        InventoryId = itemMovement.InventoryId
-                    });
             }
 
-            var result = new { Master = inventoryList, Detail = movementList };
+            //    var movements = _context.Movements
+            //        .Where(m => m.InventoryId.Equals(item.InventoryId))
+            //        .ToList();
 
-            return Json(result);
+            //    foreach (Movements itemMovement in movements)
+
+            //        movementList.Add(new MovementsViewModels
+            //        {
+            //            MovementsId = itemMovement.MovementsId,
+            //            MovementType = itemMovement.MovementType,
+            //            MovementObservation = itemMovement.MovementObservation,
+            //            MovementDate = itemMovement.MovementDate,
+            //            InventoryId = itemMovement.InventoryId
+            //        });
+            //}
+
+            //var result = new { Master = inventoryList, Detail = movementList };
+
+            return Json(inventoryList);
+        }
+
+        [Authorize(Roles = "Admin,RegistraLectura,SoloLectura")]
+        public IActionResult LoadDetailGrid()
+        {
+
+            List<MovementsViewModels> movementList = new List<MovementsViewModels>();
+
+            var movements = _context.Movements.ToList();
+
+            foreach (Movements itemMovement in movements)
+
+                movementList.Add(new MovementsViewModels
+                {
+                    MovementsId = itemMovement.MovementsId,
+                    MovementType = itemMovement.MovementType,
+                    MovementObservation = itemMovement.MovementObservation,
+                    MovementDate = itemMovement.MovementDate,
+                    InventoryId = itemMovement.InventoryId
+                });
+            
+            return Json(movementList);
         }
 
         [Authorize(Roles = "Admin,SoloLectura")]

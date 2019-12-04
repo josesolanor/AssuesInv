@@ -28,16 +28,16 @@
                     </ul>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <ul class="navbar-nav flex-lg-grow-0">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Inventory" asp-action="Index">Hola @User.Identity.Name</a>
-                            </li>
-                            <li class="nav-item">
-                                <form asp-controller="Login" asp-action="Logout" method="post">
-                                    <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
-                                </form>
-                            </li>
-                        </ul>
+                    <ul class="navbar-nav flex-lg-grow-0">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Inventory" asp-action="Index">Hola @User.Identity.Name</a>
+                        </li>
+                        <li class="nav-item">
+                            <form asp-controller="Login" asp-action="Logout" method="post">
+                                <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
                     }
                 </div>
             </div>
@@ -59,6 +59,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
     <script src="~/js/dx.all.js"></script>
+    <script src="https://unpkg.com/devextreme-aspnet-data/js/dx.aspnet.data.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

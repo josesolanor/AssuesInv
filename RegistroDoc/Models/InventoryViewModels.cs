@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RegistroDoc.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,5 +24,6 @@ namespace RegistroDoc.Models
         public string Shelf { get; set; }
         public string Bald { get; set; }
         public int Box { get; set; }
+        public List<MovementsViewModels> Movements { get; set; }
     }
 }

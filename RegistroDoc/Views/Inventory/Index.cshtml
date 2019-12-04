@@ -93,21 +93,13 @@
             }
         });
 
-    $.ajax({
-        url: '@Url.Action("LoadGrid", "Inventory")',
-        type: "GET"
-    }).done(function (response) {
+        $(function () {
 
-        var dataSourceMaster = response.master;
-        var dataSourceDetail = response.detail;
+            var storeMaster = new DevExpress.data.CustomStore();
 
-        console.log(dataSourceMaster);
-        console.log(dataSourceDetail);
-
-        $(function(){
             $("#inventoryGrid").dxDataGrid({
-                dataSource: dataSourceMaster,
                 keyExpr: "inventoryId",
+                dataSource: storeMaster,
                 allowColumnReordering: true,
                 allowColumnResizing: true,
                 columnAutoWidth: true,
@@ -116,7 +108,7 @@
                 rowAlternationEnabled: true,
                 showBorders: true,
                 columnChooser: {
-                enabled: true
+                    enabled: true
                 },
                 filterRow: {
                     visible: true,
@@ -143,7 +135,7 @@
                 },
                 "export": {
                     enabled: true,
-                    fileName: "Lista_Documentos"+Date.now(),
+                    fileName: "Lista_Documentos" + Date.now(),
                     allowExportSelectedData: true
                 },
                 columns: [
@@ -396,7 +388,7 @@
                                 dataSource: new DevExpress.data.DataSource({
                                     store: new DevExpress.data.ArrayStore({
                                         key: "movementsId",
-                                        data: dataSourceDetail
+                                        data: currentDocumentData.movements
                                     }),
                                     filter: ["inventoryId", "=", options.key]
                                 })
@@ -404,13 +396,21 @@
                     }
                 }
             });
-        });
 
-    });
+            $.ajax({
+                url: '@Url.Action("LoadGrid", "Inventory")',
+                type: "GET"
+            }).done(function (response) {
+                var dataSourceMaster = response;
+                $("#inventoryGrid").dxDataGrid("instance").option("dataSource", dataSourceMaster);
+            });
+
+            
+
+        });
     </script>
     <script>
         function movementModal(data) {
-            console.log(data);
             $("#MovementModal").modal();
             document.getElementById("InventoryId").value = data.id;
             document.getElementById("MovementType").value = data.action;

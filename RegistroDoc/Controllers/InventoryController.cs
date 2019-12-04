@@ -34,11 +34,23 @@ namespace RegistroDoc.Controllers
             List<InventoryViewModels> inventoryList = new List<InventoryViewModels>();
             List<MovementsViewModels> movementList = new List<MovementsViewModels>();
 
-            var inventories = _context.Inventory  
+            var inventories = _context.Inventory
+                .Include(x => x.Movements)
                 .ToList();            
 
             foreach (Inventory item in inventories)
             {
+                foreach (Movements itemMovement in item.Movements)
+
+                movementList.Add(new MovementsViewModels
+                {
+                    MovementsId = itemMovement.MovementsId,
+                    MovementType = itemMovement.MovementType,
+                    MovementObservation = itemMovement.MovementObservation,
+                    MovementDate = itemMovement.MovementDate,
+                    InventoryId = itemMovement.InventoryId
+                });
+
                 inventoryList.Add(new InventoryViewModels
                 {
                     InventoryId = item.InventoryId,
@@ -56,28 +68,12 @@ namespace RegistroDoc.Controllers
                     DocumentObservation = item.DocumentObservation,
                     Shelf = item.Shelf,
                     Bald = item.Bald,
-                    Box = item.Box
+                    Box = item.Box,
+                    Movements = movementList
                 });
-
-                var movements = _context.Movements
-                    .Where(m => m.InventoryId.Equals(item.InventoryId))
-                    .ToList();
-
-                foreach (Movements itemMovement in movements)
-
-                    movementList.Add(new MovementsViewModels
-                    {
-                        MovementsId = itemMovement.MovementsId,
-                        MovementType = itemMovement.MovementType,
-                        MovementObservation = itemMovement.MovementObservation,
-                        MovementDate = itemMovement.MovementDate,
-                        InventoryId = itemMovement.InventoryId
-                    });
             }
 
-            var result = new { Master = inventoryList, Detail = movementList };
-
-            return Json(result);
+            return Json(inventoryList);
         }
 
         [Authorize(Roles = "Admin,SoloLectura")]

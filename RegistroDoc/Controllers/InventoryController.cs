@@ -73,7 +73,10 @@ namespace RegistroDoc.Controllers
                 });
             }
 
-            return Json(inventoryList);
+            var totalCount = inventoryList.Count();
+            var result = new { Data = inventoryList, TotalCount = totalCount };
+            return Json(result);
+
         }
 
         [Authorize(Roles = "Admin,SoloLectura")]

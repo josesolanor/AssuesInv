@@ -95,11 +95,42 @@
 
         $(function () {
 
-            var storeMaster = new DevExpress.data.CustomStore();
+            var dataSourceMaster = new DevExpress.data.DataSource({
+                key: "inventoryId",
+                load: function(loadOptions) {
+                    var d = $.Deferred(),
+                            params = {};
+                    [
+                        "skip",     
+                        "take", 
+                        "requireTotalCount", 
+                        "requireGroupCount", 
+                        "sort", 
+                        "filter", 
+                        "totalSummary", 
+                        "group", 
+                        "groupSummary"
+                    ].forEach(function(i) {
+                        if(i in loadOptions && isNotEmpty(loadOptions[i])) 
+                            params[i] = JSON.stringify(loadOptions[i]);
+                    });
+                    $.getJSON('@Url.Action("LoadGrid", "Inventory")', params)
+                        .done(function (result) {
+                            console.log(result);
+                            d.resolve(result['data'], { 
+                                totalCount: result['totalCount']
+                            });
+                        });
+                    return d.promise();
+                }
+            });
+            function isNotEmpty(value) {
+                return value !== undefined && value !== null && value !== "";
+            }
 
             $("#inventoryGrid").dxDataGrid({
                 keyExpr: "inventoryId",
-                dataSource: storeMaster,
+                dataSource: dataSourceMaster,
                 allowColumnReordering: true,
                 allowColumnResizing: true,
                 columnAutoWidth: true,
@@ -107,6 +138,12 @@
                 showRowLines: true,
                 rowAlternationEnabled: true,
                 showBorders: true,
+                remoteOperations: {
+                    groupPaging: false,
+                    filtering : false,  
+                    paging : false,  
+                    sorting : false 
+                },
                 columnChooser: {
                     enabled: true
                 },
@@ -116,19 +153,15 @@
                 columnFixing: {
                     enabled: true
                 },
-                headerFilter: { visible: true },
+                headerFilter: {
+                    visible: true
+                },
                 paging: {
                     pageSize: 25
                 },
                 pager: {
                     showPageSizeSelector: true,
                     allowedPageSizes: [25, 50, 100]
-                },
-                selection: {
-                    mode: "single"
-                },
-                grouping: {
-                    autoExpandAll: true
                 },
                 headerFilter: {
                     visible: true
@@ -304,13 +337,12 @@
                     }
                 ],
                 masterDetail: {
-                enabled: true,
-                    template: function (container, options)
-                    {
-                    var currentDocumentData = options.data;
+                    enabled: true,
+                    template: function (container, options) {
+                        var currentDocumentData = options.data;
                         $("<div>")
                             .addClass("master-detail-caption")
-                            .text("Historico del documento: "+currentDocumentData.documentTitle+", Codigo: "+currentDocumentData.referenceCode)
+                            .text("Historico del documento: " + currentDocumentData.documentTitle + ", Codigo: " + currentDocumentData.referenceCode)
                             .appendTo(container);
 
                         $("<div>")
@@ -319,71 +351,71 @@
                                 showBorders: true,
                                 "export": {
                                     enabled: true,
-                                    fileName: "Movimientos de: "+currentDocumentData.documentTitle+", Codigo: "+currentDocumentData.referenceCode+" Fecha: "+Date.now(),
+                                    fileName: "Movimientos de: " + currentDocumentData.documentTitle + ", Codigo: " + currentDocumentData.referenceCode + " Fecha: " + Date.now(),
                                     allowExportSelectedData: true
                                 },
                                 columns: [
-                                {
-                                    dataField: "movementsId",
-                                    visible: false
-                                },
-                                {
-                                    dataField: "movementType",
-                                    caption: 'Tipo de movimiento'
-                                },
-                                {
-                                    dataField: "movementObservation",
-                                    caption: 'Observaciones'
-                                },
-                                {
-                                    dataField: "movementDate",
-                                    caption: 'Fecha',
-                                    dataType: "date",
-                                    format: 'dd/MM/yyyy HH:mm:ss'
-                                },
-                                {
-                                    dataField: "inventoryId",
-                                    visible: false
-                                },
-                                {
-                                    dataField: "AccionesMovimiento",
-                                    caption: 'Acciones Movimiento', 
-                                    visible: userRoleRegisterDocumentVisible,
-                                    cellTemplate: function (container, options) {
+                                    {
+                                        dataField: "movementsId",
+                                        visible: false
+                                    },
+                                    {
+                                        dataField: "movementType",
+                                        caption: 'Tipo de movimiento'
+                                    },
+                                    {
+                                        dataField: "movementObservation",
+                                        caption: 'Observaciones'
+                                    },
+                                    {
+                                        dataField: "movementDate",
+                                        caption: 'Fecha',
+                                        dataType: "date",
+                                        format: 'dd/MM/yyyy HH:mm:ss'
+                                    },
+                                    {
+                                        dataField: "inventoryId",
+                                        visible: false
+                                    },
+                                    {
+                                        dataField: "AccionesMovimiento",
+                                        caption: 'Acciones Movimiento',
+                                        visible: userRoleRegisterDocumentVisible,
+                                        cellTemplate: function (container, options) {
 
-                                        var wrapper = $("<center>");    
-                                        var EditContainer = $("<div>");
-                                        var DeleteContainer = $("<div>");
-                                        if ('@userRole' == "Admin" || '@userRole' == "RegistraLectura") {
-                                            container.append(wrapper.append(EditContainer));
+                                            var wrapper = $("<center>");
+                                            var EditContainer = $("<div>");
+                                            var DeleteContainer = $("<div>");
+                                            if ('@userRole' == "Admin" || '@userRole' == "RegistraLectura") {
+                                                container.append(wrapper.append(EditContainer));
 
-                                            EditContainer.dxButton({
-                                                hint: 'Editar',
-                                                type: "default",
-                                                icon: 'fa fa-edit',
-                                                width: 50,
-                                                onClick: function () {
-                                                    var url = "@Url.Action("Edit","Movements")/" + options.data['movementsId'];
-                                                    window.location.href = url;
-                                                }
-                                            });
+                                                EditContainer.dxButton({
+                                                    hint: 'Editar',
+                                                    type: "default",
+                                                    icon: 'fa fa-edit',
+                                                    width: 50,
+                                                    onClick: function () {
+                                                        var url = "@Url.Action("Edit","Movements")/" + options.data['movementsId'];
+                                                        window.location.href = url;
+                                                    }
+                                                });
 
-                                            container.append(wrapper.append(DeleteContainer));
+                                                container.append(wrapper.append(DeleteContainer));
 
-                                            DeleteContainer.dxButton({
-                                                hint: 'Eliminar',
-                                                type: 'danger',
-                                                icon: 'fa fa-trash',
-                                                width: 50,
-                                                onClick: function () {
-                                                    var url = "@Url.Action("Delete","Movements")/" + options.data['movementsId'];
-                                                    window.location.href = url;
-                                                }
-                                            });
+                                                DeleteContainer.dxButton({
+                                                    hint: 'Eliminar',
+                                                    type: 'danger',
+                                                    icon: 'fa fa-trash',
+                                                    width: 50,
+                                                    onClick: function () {
+                                                        var url = "@Url.Action("Delete","Movements")/" + options.data['movementsId'];
+                                                        window.location.href = url;
+                                                    }
+                                                });
+                                            }
+
                                         }
-
-                                    }
-                                },
+                                    },
                                 ],
                                 dataSource: new DevExpress.data.DataSource({
                                     store: new DevExpress.data.ArrayStore({
@@ -395,18 +427,7 @@
                             }).appendTo(container);
                     }
                 }
-            });
-
-            $.ajax({
-                url: '@Url.Action("LoadGrid", "Inventory")',
-                type: "GET"
-            }).done(function (response) {
-                var dataSourceMaster = response;
-                $("#inventoryGrid").dxDataGrid("instance").option("dataSource", dataSourceMaster);
-            });
-
-            
-
+            });         
         });
     </script>
     <script>

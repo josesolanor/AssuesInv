@@ -53,7 +53,7 @@ namespace RegistroDoc.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
-            ViewData["RoleId"] = new SelectList(_context.Role, "RoleId", "RoleId");
+            ViewData["RoleId"] = new SelectList(_context.Role, "RoleId", "RoleValue");
             return View();
         }
 
@@ -71,7 +71,7 @@ namespace RegistroDoc.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Role, "RoleId", "RoleId", user.RoleId);
+            ViewData["RoleId"] = new SelectList(_context.Role, "RoleId", "RoleValue", user.RoleId);
             return View(user);
         }
 
@@ -88,7 +88,7 @@ namespace RegistroDoc.Controllers
             {
                 return NotFound();
             }
-            ViewData["RoleId"] = new SelectList(_context.Role, "RoleId", "RoleId", user.RoleId);
+            ViewData["RoleId"] = new SelectList(_context.Role, "RoleId", "RoleValue", user.RoleId);
             return View(user);
         }
 
@@ -133,7 +133,7 @@ namespace RegistroDoc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Role, "RoleId", "RoleId", user.RoleId);
+            ViewData["RoleId"] = new SelectList(_context.Role, "RoleId", "RoleValue", user.RoleId);
             return View(user);
         }
 

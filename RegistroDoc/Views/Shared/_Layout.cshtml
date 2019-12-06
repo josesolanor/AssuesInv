@@ -21,23 +21,29 @@
                 </button>
                 @*<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">*@
                 <div id="navbarNavDropdown" class="navbar-collapse collapse">
-                    <ul class="navbar-nav flex-lg-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Inventory" asp-action="Index">Inicio</a>
-                        </li>
-                    </ul>
+
                     @if (User.Identity.IsAuthenticated)
                     {
-                    <ul class="navbar-nav flex-lg-grow-0">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Inventory" asp-action="Index">Hola @User.Identity.Name</a>
-                        </li>
-                        <li class="nav-item">
-                            <form asp-controller="Login" asp-action="Logout" method="post">
-                                <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
-                            </form>
-                        </li>
-                    </ul>
+
+                        <ul class="navbar-nav flex-lg-grow-1">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Users" asp-action="Index">Usuarios</a>
+                                </li>
+                            }
+                        </ul>
+
+                        <ul class="navbar-nav flex-lg-grow-0">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Inventory" asp-action="Index">Hola @User.Identity.Name</a>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Login" asp-action="Logout" method="post">
+                                    <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
                     }
                 </div>
             </div>

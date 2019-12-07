@@ -14,7 +14,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container" style="max-width: 1500px;">
-                <a class="navbar-brand" asp-area="" asp-controller="Inventory" asp-action="Index">ADL Búsqueda</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Inventory" asp-action="Index">INICIO</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -29,7 +29,7 @@
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Users" asp-action="Index">Usuarios</a>
+                                    <a class="nav-link text-dark" asp-controller="Users" asp-action="Index">USUARIOS</a>
                                 </li>
                             }
                         </ul>
@@ -40,7 +40,7 @@
                             </li>
                             <li class="nav-item">
                                 <form asp-controller="Login" asp-action="Logout" method="post">
-                                    <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
+                                    <button type="submit" class="btn btn-link navbar-btn navbar-link">Cerrar Sesión</button>
                                 </form>
                             </li>
                         </ul>

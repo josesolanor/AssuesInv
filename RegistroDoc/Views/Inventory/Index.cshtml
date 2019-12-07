@@ -18,12 +18,12 @@
     }
 }
 
-<h1>ADL Búsqueda</h1>
+<h1 class="text-center">ADL Búsqueda</h1>
 
 @if (User.IsInRole("Admin"))
 {
     <p>
-        <a asp-action="Create">Adicionar nuevo documento</a>
+        <a asp-action="Create">Nuevo Registro</a>
     </p>
 }
 <h5 style="color: red">@TempData["ErrorMsg"]</h5>

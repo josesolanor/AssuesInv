@@ -1,0 +1,69 @@
+﻿@model RegistroDoc.Entities.Inventory
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "_LayoutLogin";
+}
+
+<div>
+    <h2>@Html.DisplayNameFor(model => model.ReferenceCode) : @Html.DisplayFor(model => model.ReferenceCode)</h2>
+    <hr />
+    <table class="table table-bordered table-condensed table-striped">
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.Number) :</b></td>
+            <td>@Html.DisplayFor(model => model.Number)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.DocumentTitle) :</b></td>
+            <td>@Html.DisplayFor(model => model.DocumentTitle)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.Series) :</b></td>
+            <td>@Html.DisplayFor(model => model.Series)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.Volume) :</b></td>
+            <td>@Html.DisplayFor(model => model.Volume)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.SecondNumber) :</b></td>
+            <td>@Html.DisplayFor(model => model.SecondNumber)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.ExtremeDates) :</b></td>
+            <td>@Html.DisplayFor(model => model.ExtremeDates)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.InstallationUnit) :</b></td>
+            <td>@Html.DisplayFor(model => model.InstallationUnit)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.NumberSheets) :</b></td>
+            <td>@Html.DisplayFor(model => model.NumberSheets)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.ProducerName) :</b></td>
+            <td>@Html.DisplayFor(model => model.ProducerName)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.StateConservation) :</b></td>
+            <td>@Html.DisplayFor(model => model.StateConservation)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.DocumentObservation) :</b></td>
+            <td>@Html.DisplayFor(model => model.DocumentObservation)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.Shelf) :</b></td>
+            <td>@Html.DisplayFor(model => model.Shelf)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.Bald) :</b></td>
+            <td>@Html.DisplayFor(model => model.Bald)</td>
+        </tr>
+        <tr>
+            <td><b>@Html.DisplayNameFor(model => model.Box) :</b></td>
+            <td>@Html.DisplayFor(model => model.Box)</td>
+        </tr>
+    </table>
+</div>

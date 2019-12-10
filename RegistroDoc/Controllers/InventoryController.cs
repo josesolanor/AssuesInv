@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using RegistroDoc.Context;
 using RegistroDoc.Entities;
 using RegistroDoc.Models;
+using Rotativa.AspNetCore;
 
 namespace RegistroDoc.Controllers
 {
@@ -97,6 +98,30 @@ namespace RegistroDoc.Controllers
             return View(inventory);
         }
 
+        [Authorize(Roles = "Admin,SoloLectura")]
+        public async Task<IActionResult> DetailPDF(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var inventory = await _context.Inventory
+                .FirstOrDefaultAsync(m => m.InventoryId == id);
+            if (inventory == null)
+            {
+                return NotFound();
+            }
+
+            return new ViewAsPdf("DetailPDF", inventory)
+            {
+                //FileName = $"Detalle_{inventory.ReferenceCode}_{inventory.DocumentTitle}.pdf",
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageSize = Rotativa.AspNetCore.Options.Size.A4
+                
+            };
+        }
+        
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {

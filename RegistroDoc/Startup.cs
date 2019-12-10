@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RegistroDoc.Context;
 using RegistroDoc.Core;
+using Rotativa.AspNetCore;
 
 namespace RegistroDoc
 {
@@ -68,7 +69,7 @@ namespace RegistroDoc
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Microsoft.AspNetCore.Hosting.IHostingEnvironment env2)
         {
             app.UseForwardedHeaders();
 
@@ -97,6 +98,8 @@ namespace RegistroDoc
                     name: "default",
                     pattern: "{controller=Login}/{action=Index}/{id?}");
             });
+
+            RotativaConfiguration.Setup(env2, "..\\Rotativa\\Windows\\");
         }
     }
 }

@@ -52,6 +52,12 @@ namespace RegistroDoc.Controllers
         [Authorize(Roles = "Admin,RegistraLectura")]
         public async Task<IActionResult> Edit(int? id)
         {
+            List<SelectListItem> listMovements = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Egreso", Text = "Egreso" },
+                new SelectListItem { Value = "Ingreso", Text = "Ingreso" },
+            };
+
             if (id == null)
             {
                 return NotFound();
@@ -62,6 +68,7 @@ namespace RegistroDoc.Controllers
             {
                 return NotFound();
             }
+            ViewData["ListMovements"] = new SelectList(listMovements, "Value", "Text");
             ViewData["InventoryId"] = new SelectList(_context.Inventory, "InventoryId", "InventoryId", movements.InventoryId);
             return View(movements);
         }
@@ -71,6 +78,8 @@ namespace RegistroDoc.Controllers
         [Authorize(Roles = "Admin,RegistraLectura")]
         public async Task<IActionResult> Edit(int id, [Bind("MovementsId,MovementType,MovementDate,MovementObservation,InventoryId")] Movements movements)
         {
+            
+
             if (id != movements.MovementsId)
             {
                 return NotFound();
@@ -95,7 +104,7 @@ namespace RegistroDoc.Controllers
                     }
                 }
                 return RedirectToAction("Index", "Inventory");
-            }
+            }            
             ViewData["InventoryId"] = new SelectList(_context.Inventory, "InventoryId", "InventoryId", movements.InventoryId);
             return RedirectToAction("Index", "Inventory");
         }

@@ -25,7 +25,7 @@ namespace RegistroDoc.Entities
         [DisplayName("Serie")]
         public string Series { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_VOLUMEN")]
-        [DisplayName("Tomo y/o ")]
+        [DisplayName("Tomo y/o")]
         public string Volume { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_SECOND_NUMBER")]
         [DisplayName("Nº")]
@@ -43,7 +43,7 @@ namespace RegistroDoc.Entities
         [DisplayName("Nombre del Productor")]
         public string ProducerName { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_STATE_CONVERSATION")]
-        [DisplayName("Estado de Conservación")]
+        [DisplayName("Estado de Conservación (Referencia cruzada)")]
         public string StateConservation { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_DOCUMENT_OBSERVATION")]
         [DisplayName("Observación del Documento")]

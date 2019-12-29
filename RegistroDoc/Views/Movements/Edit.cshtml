@@ -16,7 +16,7 @@
             <input type="hidden" asp-for="InventoryId" />
             <div class="form-group">
                 <label asp-for="MovementType" class="control-label"></label>
-                <input asp-for="MovementType" class="form-control" />
+                <select asp-for="MovementType" class="form-control" asp-items="ViewBag.ListMovements"></select>
                 <span asp-validation-for="MovementType" class="text-danger"></span>
             </div>
             <div class="form-group">

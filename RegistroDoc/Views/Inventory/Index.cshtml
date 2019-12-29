@@ -101,23 +101,23 @@
                     var d = $.Deferred(),
                             params = {};
                     [
-                        "skip",     
-                        "take", 
-                        "requireTotalCount", 
-                        "requireGroupCount", 
-                        "sort", 
-                        "filter", 
-                        "totalSummary", 
-                        "group", 
+                        "skip",
+                        "take",
+                        "requireTotalCount",
+                        "requireGroupCount",
+                        "sort",
+                        "filter",
+                        "totalSummary",
+                        "group",
                         "groupSummary"
                     ].forEach(function(i) {
-                        if(i in loadOptions && isNotEmpty(loadOptions[i])) 
+                        if(i in loadOptions && isNotEmpty(loadOptions[i]))
                             params[i] = JSON.stringify(loadOptions[i]);
                     });
                     $.getJSON('@Url.Action("LoadGrid", "Inventory")', params)
                         .done(function (result) {
                             console.log(result);
-                            d.resolve(result['data'], { 
+                            d.resolve(result['data'], {
                                 totalCount: result['totalCount']
                             });
                         });
@@ -140,9 +140,9 @@
                 showBorders: true,
                 remoteOperations: {
                     groupPaging: false,
-                    filtering : false,  
-                    paging : false,  
-                    sorting : false 
+                    filtering : false,
+                    paging : false,
+                    sorting : false
                 },
                 columnChooser: {
                     enabled: true
@@ -195,7 +195,7 @@
                     },
                     {
                         dataField: "volume",
-                        caption: 'Tomo y/o '
+                        caption: 'Tomo y/o'
                     },
                     {
                         dataField: "secondNumber",
@@ -223,7 +223,7 @@
                     },
                     {
                         dataField: "documentObservation",
-                        caption: 'Observación del documento'
+                        caption: 'Observación del documento (Referencia cruzada)'
                     },
                     {
                         dataField: "shelf",
@@ -371,7 +371,8 @@
                                         dataField: "movementDate",
                                         caption: 'Fecha',
                                         dataType: "date",
-                                        format: 'dd/MM/yyyy HH:mm:ss'
+                                        format: 'dd/MM/yyyy HH:mm:ss',
+                                        
                                     },
                                     {
                                         dataField: "inventoryId",
@@ -380,6 +381,7 @@
                                     {
                                         dataField: "AccionesMovimiento",
                                         caption: 'Acciones Movimiento',
+                                        allowExporting:false,
                                         visible: userRoleRegisterDocumentVisible,
                                         cellTemplate: function (container, options) {
 
@@ -417,6 +419,29 @@
                                         }
                                     },
                                 ],
+                                onExporting: function(e) {
+                                  var workbook = new ExcelJS.Workbook();
+                                  var worksheet = workbook.addWorksheet('Main sheet');
+
+                                  DevExpress.excelExporter.exportDataGrid({
+                                    component: e.component,
+                                    worksheet: worksheet,
+                                    topLeftCell: { row: 7, column: 1 },
+                                    customizeCell: function(options) {
+
+                                      var gridCell = options.gridCell;
+                                      var excelCell = options.excelCell;
+                                    }
+                                  }).then(function(dataGridRange) {
+                                    customizeHeader(worksheet, currentDocumentData);
+                                    return Promise.resolve();
+                                  }).then(function() {
+                                    workbook.xlsx.writeBuffer().then(function(buffer) {
+                                      saveAs(new Blob([buffer], { type: "application/octet-stream" }), "Movimientos de: " + currentDocumentData.documentTitle + ", Codigo: " + currentDocumentData.referenceCode + " Fecha: " + Date.now()+".xlsx");
+                                    });
+                                  });
+                                  e.cancel = true;
+                                },
                                 dataSource: new DevExpress.data.DataSource({
                                     store: new DevExpress.data.ArrayStore({
                                         key: "movementsId",
@@ -427,7 +452,26 @@
                             }).appendTo(container);
                     }
                 }
-            });         
+            });
+
+            function customizeHeader(worksheet, currentDocumentData){
+                var generalStyles = {
+                  font: { bold: true },
+                  fill: { type: 'pattern', pattern:'solid', fgColor:{argb:'D3D3D3'}, bgColor:{argb:'D3D3D3'}},
+                  alignment: { horizontal: 'left' }
+                };
+                for(var rowIndex = 1; rowIndex < 6; rowIndex++){
+                  worksheet.mergeCells(rowIndex, 1, rowIndex, 2);
+                  worksheet.mergeCells(rowIndex, 3, rowIndex, 4);
+                  Object.assign(worksheet.getRow(rowIndex).getCell(1), generalStyles);
+                  Object.assign(worksheet.getRow(rowIndex).getCell(3), generalStyles);
+                }
+                worksheet.getRow(1).height = 40;
+                worksheet.getRow(1).getCell(1).font = {  bold: true, size: 16 };
+                worksheet.getRow(1).getCell(3).font = {  bold: true, size: 16 };
+                worksheet.getColumn(1).values = [ "Código de Referencia:", "Título del Documento:", "Serie:", "Numero:", "Nombre del Productor:"];
+                worksheet.getColumn(3).values = [ currentDocumentData.referenceCode, currentDocumentData.documentTitle, currentDocumentData.series, currentDocumentData.number, currentDocumentData.producerName];
+            };
         });
     </script>
     <script>

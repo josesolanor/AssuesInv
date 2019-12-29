@@ -99,15 +99,15 @@ namespace RegistroDoc.Controllers
         }
 
         [Authorize(Roles = "Admin,SoloLectura")]
-        public async Task<IActionResult> DetailPDF(int? id)
+        public IActionResult DetailPDF(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var inventory = await _context.Inventory
-                .FirstOrDefaultAsync(m => m.InventoryId == id);
+            var inventory = _context.Inventory
+                .FirstOrDefault(m => m.InventoryId == id);
             if (inventory == null)
             {
                 return NotFound();

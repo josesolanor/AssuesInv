@@ -43,10 +43,10 @@ namespace RegistroDoc.Entities
         [DisplayName("Nombre del Productor")]
         public string ProducerName { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_STATE_CONVERSATION")]
-        [DisplayName("Estado de Conservación (Referencia cruzada)")]
+        [DisplayName("Estado de Conservación")]
         public string StateConservation { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_DOCUMENT_OBSERVATION")]
-        [DisplayName("Observación del Documento")]
+        [DisplayName("Observación del Documento (Referencia cruzada)")]
         public string DocumentObservation { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_SHELF")]
         [DisplayName("Estante")]
@@ -56,7 +56,7 @@ namespace RegistroDoc.Entities
         public string Bald { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_BOX")]
         [DisplayName("Nº Caja")]
-        public string Box { get; set; }        
+        public int Box { get; set; }        
         public ICollection<Movements> Movements { get; set; }
     }
 }

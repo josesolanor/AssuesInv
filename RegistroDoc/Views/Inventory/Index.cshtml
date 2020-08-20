@@ -97,7 +97,7 @@
 
             var dataSourceMaster = new DevExpress.data.DataSource({
                 key: "inventoryId",
-                load: function( ) {
+                load: function(loadOptions) {
                     var d = $.Deferred(),
                             params = {};
                     [

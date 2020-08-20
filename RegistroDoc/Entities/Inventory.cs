@@ -56,7 +56,7 @@ namespace RegistroDoc.Entities
         public string Bald { get; set; }
         [Column("SYS_INASES_INV_INVENTORY_BOX")]
         [DisplayName("Nº Caja")]
-        public string Box { get; set; }        
+        public int Box { get; set; }        
         public ICollection<Movements> Movements { get; set; }
     }
 }

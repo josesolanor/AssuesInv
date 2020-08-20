@@ -23,7 +23,7 @@ namespace RegistroDoc.Models
         public string DocumentObservation { get; set; }
         public string Shelf { get; set; }
         public string Bald { get; set; }
-        public string Box { get; set; }
+        public int Box { get; set; }
         public List<MovementsViewModels> Movements { get; set; }
     }
 }

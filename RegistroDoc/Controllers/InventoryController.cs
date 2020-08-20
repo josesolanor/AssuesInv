@@ -32,25 +32,23 @@ namespace RegistroDoc.Controllers
         [Authorize(Roles = "Admin,RegistraLectura,SoloLectura")]
         public IActionResult LoadGrid()
         {
-            List<InventoryViewModels> inventoryList = new List<InventoryViewModels>();
-            List<MovementsViewModels> movementList = new List<MovementsViewModels>();
+            var inventoryList = new List<InventoryViewModels>();
+            var movementList = new List<MovementsViewModels>();
 
             var inventories = _context.Inventory
                 .Include(x => x.Movements)
                 .ToList();            
 
-            foreach (Inventory item in inventories)
+            foreach (var item in inventories)
             {
-                foreach (Movements itemMovement in item.Movements)
-
-                movementList.Add(new MovementsViewModels
+                movementList.AddRange(item.Movements.Select(itemMovement => new MovementsViewModels
                 {
                     MovementsId = itemMovement.MovementsId,
                     MovementType = itemMovement.MovementType,
                     MovementObservation = itemMovement.MovementObservation,
                     MovementDate = itemMovement.MovementDate,
                     InventoryId = itemMovement.InventoryId
-                });
+                }));
 
                 inventoryList.Add(new InventoryViewModels
                 {
@@ -113,7 +111,7 @@ namespace RegistroDoc.Controllers
                 return NotFound();
             }
 
-            return new ViewAsPdf("DetailPDF", inventory)
+            return new ActionAsPdf("DetailPDF", inventory)
             {
                 //FileName = $"Detalle_{inventory.ReferenceCode}_{inventory.DocumentTitle}.pdf",
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,

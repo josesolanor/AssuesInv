@@ -93,9 +93,10 @@
             }
         });
 
+        var dataSourceDetailsGrid;
         $(function () {
 
-            var dataSourceMaster = new DevExpress.data.DataSource({
+            var dataSourceMaster = new DevExpress.data.CustomStore({
                 key: "inventoryId",
                 load: function(loadOptions) {
                     var d = $.Deferred(),
@@ -114,19 +115,39 @@
                         if(i in loadOptions && isNotEmpty(loadOptions[i]))
                             params[i] = JSON.stringify(loadOptions[i]);
                     });
-                    $.getJSON('@Url.Action("LoadGrid", "Inventory")', params)
-                        .done(function (result) {
-                            console.log(result);
-                            d.resolve(result['data'], {
-                                totalCount: result['totalCount']
+                    $.ajax({
+                        url: '@Url.Action("LoadGrid", "Inventory")',
+                        dataType: "json",
+                        data: params,
+                        success: function (result) {
+                            d.resolve(result.data, {
+                                totalCount: result.totalCount,
+                                summary: result.summary,
+                                groupCount: result.groupCount
                             });
-                        });
+                        },
+                        error: function () {
+                            d.reject("Data Loading Error");
+                        },
+                        timeout: 5000
+                    });
                     return d.promise();
                 }
             });
             function isNotEmpty(value) {
                 return value !== undefined && value !== null && value !== "";
             }
+
+            function isNotEmpty(value) {
+                return value !== undefined && value !== null && value !== "";
+            }
+
+            $.ajax({
+                url: '@Url.Action("LoadGridDetails", "Inventory")',
+                type: "GET"
+            }).done(function (response) {                
+                dataSourceDetailsGrid = response;
+            });
 
             $("#inventoryGrid").dxDataGrid({
                 keyExpr: "inventoryId",
@@ -138,12 +159,7 @@
                 showRowLines: true,
                 rowAlternationEnabled: true,
                 showBorders: true,
-                remoteOperations: {
-                    groupPaging: false,
-                    filtering : false,
-                    paging : false,
-                    sorting : false
-                },
+                remoteOperations: true,
                 columnChooser: {
                     enabled: true
                 },
@@ -372,7 +388,7 @@
                                         caption: 'Fecha',
                                         dataType: "date",
                                         format: 'dd/MM/yyyy HH:mm:ss',
-                                        
+
                                     },
                                     {
                                         dataField: "inventoryId",
@@ -442,13 +458,15 @@
                                   });
                                   e.cancel = true;
                                 },
+
                                 dataSource: new DevExpress.data.DataSource({
                                     store: new DevExpress.data.ArrayStore({
                                         key: "movementsId",
-                                        data: currentDocumentData.movements
+                                        data: dataSourceDetailsGrid
                                     }),
                                     filter: ["inventoryId", "=", options.key]
                                 })
+
                             }).appendTo(container);
                     }
                 }
@@ -473,6 +491,7 @@
                 worksheet.getColumn(3).values = [ currentDocumentData.referenceCode, currentDocumentData.documentTitle, currentDocumentData.series, currentDocumentData.number, currentDocumentData.producerName];
             };
         });
+
     </script>
     <script>
         function movementModal(data) {

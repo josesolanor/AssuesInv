@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DevExtreme.AspNet.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RegistroDoc.Context;
+using RegistroDoc.Core;
 using RegistroDoc.Entities;
 using RegistroDoc.Models;
 using Rotativa.AspNetCore;
@@ -17,11 +19,11 @@ namespace RegistroDoc.Controllers
     public class InventoryController : Controller
     {
         private readonly AppDBContext _context;
-     
+
         public InventoryController(AppDBContext context)
         {
             _context = context;
-        }       
+        }
         [Authorize(Roles = "Admin,RegistraLectura,SoloLectura")]
         public IActionResult Index()
         {
@@ -29,19 +31,73 @@ namespace RegistroDoc.Controllers
             return View(model);
         }
 
+        //[Authorize(Roles = "Admin,RegistraLectura,SoloLectura")]
+        //public IActionResult LoadGrid()
+        //{
+        //    List<InventoryViewModels> inventoryList = new List<InventoryViewModels>();
+        //    List<MovementsViewModels> movementList = new List<MovementsViewModels>();
+
+        //    var inventories = _context.Inventory
+        //        .Include(x => x.Movements)
+        //        .ToList();
+
+        //    foreach (Inventory item in inventories)
+        //    {
+        //        foreach (Movements itemMovement in item.Movements)
+
+        //            movementList.Add(new MovementsViewModels
+        //            {
+        //                MovementsId = itemMovement.MovementsId,
+        //                MovementType = itemMovement.MovementType,
+        //                MovementObservation = itemMovement.MovementObservation,
+        //                MovementDate = itemMovement.MovementDate,
+        //                InventoryId = itemMovement.InventoryId
+        //            });
+
+        //        inventoryList.Add(new InventoryViewModels
+        //        {
+        //            InventoryId = item.InventoryId,
+        //            Number = item.Number,
+        //            ReferenceCode = item.ReferenceCode,
+        //            DocumentTitle = item.DocumentTitle,
+        //            Series = item.Series,
+        //            Volume = item.Volume,
+        //            SecondNumber = item.SecondNumber,
+        //            ExtremeDates = item.ExtremeDates,
+        //            InstallationUnit = item.InstallationUnit,
+        //            NumberSheets = item.NumberSheets,
+        //            ProducerName = item.ProducerName,
+        //            StateConservation = item.StateConservation,
+        //            DocumentObservation = item.DocumentObservation,
+        //            Shelf = item.Shelf,
+        //            Bald = item.Bald,
+        //            Box = item.Box,
+        //            Movements = movementList
+        //        });
+        //    }
+
+        //    var totalCount = inventoryList.Count();
+        //    var result = new { Data = inventoryList, TotalCount = totalCount };
+        //    return Json(result);
+
+        //}
+
         [Authorize(Roles = "Admin,RegistraLectura,SoloLectura")]
-        public IActionResult LoadGrid()
+        public object LoadGrid(DataSourceLoadOptions loadOptions)
         {
-            List<InventoryViewModels> inventoryList = new List<InventoryViewModels>();
+            var inventories = _context.Inventory;
+
+            var data = DataSourceLoader.Load(inventories, loadOptions);
+            return data;
+        }
+
+        [Authorize(Roles = "Admin,RegistraLectura,SoloLectura")]
+        public IActionResult LoadGridDetails(DataSourceLoadOptions loadOptions)
+        {
             List<MovementsViewModels> movementList = new List<MovementsViewModels>();
-
-            var inventories = _context.Inventory
-                .Include(x => x.Movements)
-                .ToList();            
-
-            foreach (Inventory item in inventories)
+            var inventories = _context.Movements.ToList();
+            foreach (Movements itemMovement in inventories)
             {
-                foreach (Movements itemMovement in item.Movements)
 
                 movementList.Add(new MovementsViewModels
                 {
@@ -51,34 +107,14 @@ namespace RegistroDoc.Controllers
                     MovementDate = itemMovement.MovementDate,
                     InventoryId = itemMovement.InventoryId
                 });
-
-                inventoryList.Add(new InventoryViewModels
-                {
-                    InventoryId = item.InventoryId,
-                    Number = item.Number,
-                    ReferenceCode = item.ReferenceCode,
-                    DocumentTitle = item.DocumentTitle,
-                    Series = item.Series,
-                    Volume = item.Volume,
-                    SecondNumber = item.SecondNumber,
-                    ExtremeDates = item.ExtremeDates,
-                    InstallationUnit = item.InstallationUnit,
-                    NumberSheets = item.NumberSheets,
-                    ProducerName = item.ProducerName,
-                    StateConservation = item.StateConservation,
-                    DocumentObservation = item.DocumentObservation,
-                    Shelf = item.Shelf,
-                    Bald = item.Bald,
-                    Box = item.Box,
-                    Movements = movementList
-                });
             }
 
-            var totalCount = inventoryList.Count();
-            var result = new { Data = inventoryList, TotalCount = totalCount };
-            return Json(result);
+            var totalCount = movementList.Count();
+            var result = new { Data = movementList, TotalCount = totalCount };
+            return Json(movementList);
 
         }
+
 
         [Authorize(Roles = "Admin,SoloLectura")]
         public async Task<IActionResult> Details(int? id)
@@ -118,10 +154,10 @@ namespace RegistroDoc.Controllers
                 //FileName = $"Detalle_{inventory.ReferenceCode}_{inventory.DocumentTitle}.pdf",
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
                 PageSize = Rotativa.AspNetCore.Options.Size.A4
-                
+
             };
         }
-        
+
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
